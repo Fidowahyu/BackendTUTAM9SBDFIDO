@@ -1,14 +1,18 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const dotenv = require('dotenv');
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-
+// Connect to MongoDB
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb+srv://fidowahyu567:Fido2005@tutam9sbdfido.xl3qe3v.mongodb.net/?retryWrites=true&w=majority&appName=tutam9sbdfido');
+    await mongoose.connect(process.env.MONGO_URI);
     console.log('✅ Connected to MongoDB <Fido>');
   } catch (err) {
     console.error('❌ MongoDB connection error:', err);
@@ -18,15 +22,30 @@ const connectDB = async () => {
 
 connectDB();
 
-
-app.use(cors());
+// Middleware
+app.use(cors({
+  origin: process.env.frontend_url || 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Routes
+const todoRoutes = require('./src/Routes/todos');
+app.use('/api/todos', todoRoutes);
 
-const todoRoutes = require('./routes/todos');
+// Root route
+app.get('/', (req, res) => {
+  res.send('TodoFido API is running!');
+});
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something went wrong!' });
+});
 
+// Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
