@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // 👉 Routes
-app.use('/api/todos', require('./routes/todos'));
+const todoRoutes = require('./routes/todos');
 
 // 👉 Start server
 app.listen(PORT, () => {
