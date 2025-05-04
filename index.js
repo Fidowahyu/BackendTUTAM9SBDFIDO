@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// 👉 Connect to MongoDB
+
 const connectDB = async () => {
   try {
     await mongoose.connect('mongodb+srv://fidowahyu567:Fido2005@tutam9sbdfido.xl3qe3v.mongodb.net/?retryWrites=true&w=majority&appName=tutam9sbdfido');
@@ -18,15 +18,15 @@ const connectDB = async () => {
 
 connectDB();
 
-// 👉 Middleware
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 👉 Routes
-const todoRoutes = require('./Backend/routes/todos.js');
 
-// 👉 Start server
+const todoRoutes = require('./routes/todos');
+
+
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
